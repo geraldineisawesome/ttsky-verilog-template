@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Your Name
+ * Copyright (c) 2026 Geraldine Pineda Vega
  * SPDX-License-Identifier: Apache-2.0
  */
 
@@ -15,13 +15,25 @@ module tt_um_example (
     input  wire       clk,      // clock
     input  wire       rst_n     // reset_n - low to reset
 );
+  wire reset = ~rst_n; //active low 
+  wire[3:0] count;
+
+  counter my_counter(
+    .clk_i(clk),
+    .reset_i(reset),
+    .up_i(ui_in[0]),
+    .down_i(ui_in[1]),
+    .count_o(count)
+    );
+
+  
 
   // All output pins must be assigned. If not used, assign to 0.
-  assign uo_out  = ui_in + uio_in;  // Example: ou_out is the sum of ui_in and uio_in
+  assign uo_out  = {4'b0000,count};
   assign uio_out = 0;
   assign uio_oe  = 0;
 
   // List all unused inputs to prevent warnings
-  wire _unused = &{ena, clk, rst_n, 1'b0};
+  wire _unused = &{ena, uio_in ,ui_in[7:2], 1'b0};
 
 endmodule
